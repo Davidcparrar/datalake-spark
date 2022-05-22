@@ -1,1 +1,1 @@
-# datalake-spark
+# Sparkify AWS Spark Data Lake
