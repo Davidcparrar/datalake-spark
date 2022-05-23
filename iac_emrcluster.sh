@@ -1,4 +1,5 @@
 #!/bin/bash
+# Based on the code snippet provided in the lecture AWS CLI - Create EMR Cluster
 
 pem_key="${PEM_KEY_NAME:-key_emr_cluster}"
 cluster="${CLUSTER_NAME:-sparkify_emr_dcp}"
