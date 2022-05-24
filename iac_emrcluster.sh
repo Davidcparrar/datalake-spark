@@ -22,6 +22,7 @@ aws emr create-default-roles
 create_key(){
 aws ec2 create-key-pair --key-name $pem_key | \
 .python3 -c "import sys, json; print(json.load(sys.stdin)['KeyMaterial'])" > $pem_key.pem 
+chmod 400 $pem_key.pem 
 }
 
 get_subnetid(){
