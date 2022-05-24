@@ -80,3 +80,8 @@ and run following command.
 #### Star Schema
 
 A star schema was implemented in order to make queries about the usage of the streaming app as simple as possible.
+
+#### Notes
+
+- Running the job in an EMR Cluster with appropiate roles makes the AWS credentiasl redundant. Comment those lines.
+- Running the job locally does require the credentials.
