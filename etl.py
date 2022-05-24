@@ -61,12 +61,10 @@ def process_song_data(spark, input_data, output_data):
             StructField("year", IntegerType()),
         ]
     )
-    song_data = "{}/song_data/*/*/*/*.json".format(
-        input_data, schema=song_schema
-    )
+    song_data = "{}/song_data/*/*/*/*.json".format(input_data)
 
     # read song data file
-    df = spark.read.json(song_data)
+    df = spark.read.json(song_data, schema=song_schema)
 
     # extract columns to create songs table
     songs_table = df.select(
@@ -173,9 +171,10 @@ def process_log_data(spark, input_data, output_data):
             StructField("year", IntegerType()),
         ]
     )
-    song_df = "{}/song_data/*/*/*/*.json".format(
-        input_data, schema=song_schema
-    )
+    song_data = "{}/song_data/*/*/*/*.json".format(input_data)
+
+    # read song data file
+    song_df = spark.read.json(song_data, schema=song_schema)
 
     songplays_table = df.join(
         song_df,
