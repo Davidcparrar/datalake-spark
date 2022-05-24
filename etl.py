@@ -1,4 +1,4 @@
-# import configparser
+import configparser
 from datetime import datetime
 import os
 from pyspark.sql import SparkSession
@@ -20,11 +20,11 @@ from pyspark.sql.types import (
     IntegerType,
 )
 
-# config = configparser.ConfigParser()
-# config.read("dl.cfg")
+config = configparser.ConfigParser()
+config.read("dl.cfg")
 
-# os.environ["AWS_ACCESS_KEY_ID"] = config["AWS_ACCESS_KEY_ID"]
-# os.environ["AWS_SECRET_ACCESS_KEY"] = config["AWS_SECRET_ACCESS_KEY"]
+os.environ["AWS_ACCESS_KEY_ID"] = config["AWS_ACCESS_KEY_ID"]
+os.environ["AWS_SECRET_ACCESS_KEY"] = config["AWS_SECRET_ACCESS_KEY"]
 
 
 def create_spark_session():
@@ -61,7 +61,7 @@ def process_song_data(spark, input_data, output_data):
             StructField("year", IntegerType()),
         ]
     )
-    song_data = "{}/song_data/A/*/*/*.json".format(
+    song_data = "{}/song_data/*/*/*/*.json".format(
         input_data, schema=song_schema
     )
 
@@ -99,10 +99,8 @@ def process_song_data(spark, input_data, output_data):
     # write artists table to parquet files
     artists_table.write.parquet("{}/artists_table.parquet".format(output_data))
 
-    return df
 
-
-def process_log_data(spark, input_data, output_data, song_df):
+def process_log_data(spark, input_data, output_data):
     """Process log files to create users, time and songplays tables
 
     Args:
@@ -161,6 +159,25 @@ def process_log_data(spark, input_data, output_data, song_df):
     )
     print("Time_table")
     # extract columns from joined song and log datasets to create songplays table
+    song_schema = StructType(
+        [
+            StructField("num_songs", IntegerType()),
+            StructField("artist_id", StringType()),
+            StructField("artist_latitude", DoubleType()),
+            StructField("artist_longitude", DoubleType()),
+            StructField("artist_location", StringType()),
+            StructField("artist_name", StringType()),
+            StructField("song_id", StringType()),
+            StructField("title", StringType()),
+            StructField("duration", DoubleType()),
+            StructField("year", IntegerType()),
+        ]
+    )
+    song_df = "{}/song_data/*/*/*/*.json".format(
+        input_data, schema=song_schema
+    )
+    song_df = song_df.dropDuplicates(subset=["artist_name", "title"])
+
     songplays_table = df.join(
         song_df,
         (df.artist == song_df.artist_name) & (df.song == song_df.title),
@@ -209,8 +226,8 @@ def main():
     input_data = "s3a://udacity-dend"
     output_data = "s3a://dcp-nanodegree"
 
-    song_df = process_song_data(spark, input_data, output_data)
-    process_log_data(spark, input_data, output_data, song_df)
+    process_song_data(spark, input_data, output_data)
+    process_log_data(spark, input_data, output_data)
 
     spark.stop()
 
