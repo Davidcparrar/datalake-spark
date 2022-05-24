@@ -1,6 +1,6 @@
 # Sparkify AWS Spark Data Lake
 
-This Data Lake was created as a means to access the Sparkify data for analytical purposes.
+This Data Lake was created as a means to access the Sparkify data for analytical purposes. The ETL loads data into S3 in parquet format. A Glue crawler and Athena can be used to query the data.
 
 ## Project structure
 
@@ -85,3 +85,11 @@ A star schema was implemented in order to make queries about the usage of the st
 
 - Running the job in an EMR Cluster with appropiate roles makes the AWS credentiasl redundant. Comment those lines.
 - Running the job locally does require the credentials.
+
+### Athena
+
+A Glue Crawler may be used to get the schema from the S3 bucket. From then the AWS Console or boto3 can be used with the Athena service to query the data
+
+![Alt text](https://raw.githubusercontent.com/Davidcparrar/datalake-spark/main/sparkify_catalog.png)
+
+![Alt text](https://raw.githubusercontent.com/Davidcparrar/datalake-spark/main/athena_query.png)
