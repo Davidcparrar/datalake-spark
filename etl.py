@@ -176,7 +176,6 @@ def process_log_data(spark, input_data, output_data):
     song_df = "{}/song_data/*/*/*/*.json".format(
         input_data, schema=song_schema
     )
-    song_df = song_df.dropDuplicates(subset=["artist_name", "title"])
 
     songplays_table = df.join(
         song_df,
